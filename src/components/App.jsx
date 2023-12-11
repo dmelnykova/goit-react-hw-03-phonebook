@@ -5,7 +5,7 @@ import { ContactForm } from './ContactForm/ContactForm';
 import { ContactsList } from './ContactsList/ContactsList';
 import { FilterField } from './FilterField/Filter';
 
-
+const LOCALSTORAGE = 'contacts';
 
 export class App extends Component {
   state = {
@@ -17,6 +17,22 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedContacts = localStorage.getItem(LOCALSTORAGE);
+    if (savedContacts !== null) {
+      this.setState({
+        contacts: JSON.parse(savedContacts),
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { contacts } = this.state;
+    if (prevState.contacts !== contacts) {
+      localStorage.setItem(LOCALSTORAGE, JSON.stringify(contacts));
+    }
+  }
 
   addContact = newContact => {
     const { contacts } = this.state;
